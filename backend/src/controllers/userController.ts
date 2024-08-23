@@ -19,9 +19,7 @@ export const Register = async (req: Request, res: Response) => {
         errors: formattedErrors,
       });
     }
-        
         const payload = result.data;
-
         const existingUser = await Prisma.users.findUnique({
             where: {email: payload.email}
         })
@@ -30,15 +28,13 @@ export const Register = async (req: Request, res: Response) => {
                 message:"USer already existss. please try to login"
             })
         }
-
         const salt = bcrypt.genSaltSync()
         const hashedPassword =  bcrypt.hashSync(payload.password, salt)
-
         const user = await Prisma.users.create({
             data:{
                 name: payload.name ?? undefined,
                 email: payload.email,
-                password: hashedPassword
+                password: hashedPassword,
             }
         })
         return res.status(200).json({
@@ -46,8 +42,10 @@ export const Register = async (req: Request, res: Response) => {
             user:{ 
                 id: user.id,
                 name:user.name,
-                email: user.email
-            }
+                email: user.email,
+                createdAt: user.created_at, // Include createdAt
+
+                }
         })
     } catch (err) {
         if(err instanceof ZodError) {
@@ -63,22 +61,15 @@ export const Register = async (req: Request, res: Response) => {
         })
     }};
 
-
-
 export const Login = async (req: Request, res: Response) => {
-
     try {
-        
-  
     const result = LoginBody.safeParse(req.body)
     if(!result.success) {
         return res.status(422).json({
             message:" invalid inputs"
         })
     }
-
     const payload = result.data
-
     const existingUser = await Prisma.users.findUnique({
         where:{ email: payload.email }
     })
@@ -88,23 +79,22 @@ export const Login = async (req: Request, res: Response) => {
         })
     }
     const isPassValid = bcrypt.compareSync(payload.password, existingUser.password)
-
     if(!isPassValid) {
         return res.status(401).json({
             message: "EMail or password does not match"
         })
     }
-
     const token = jwt.sign({
         userId: existingUser.id, email: existingUser.email, name: existingUser.name
     },JWT_SECRET as string ) 
-
     return res.status(200).json({
         message:"Login succesffull",
         user:{
             id: existingUser.id,
             email: existingUser.email,
             name: existingUser.name,
+            createdAt: existingUser.created_at,
+
         } ,
         token: `Bearer ${token}`
     })
