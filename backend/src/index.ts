@@ -10,6 +10,8 @@ dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3002;
+export const JWT_SECRET = process.env.JWT_SECRET 
+
 
 app.use(express.json())
 app.use(cors())
