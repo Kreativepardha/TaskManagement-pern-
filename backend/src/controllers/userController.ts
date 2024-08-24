@@ -6,6 +6,7 @@ import { Prisma } from '../config/DBconfig';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '..';
 import { emitWarning } from 'process';
+import { maskEmail } from '../utils/maskEmail';
 
 export const Register = async (req: Request, res: Response) => {
   try {
@@ -36,13 +37,14 @@ export const Register = async (req: Request, res: Response) => {
         password: hashedPassword,
       },
     });
+    const maskedEmail = maskEmail(user.email)
     return res.status(200).json({
       message: 'User registerd succesffuly',
       user: {
         id: user.id,
         name: user.name,
-        email: user.email,
-        createdAt: user.created_at, // Include createdAt
+        email: maskedEmail,
+        createdAt: user.created_at, 
       },
     });
   } catch (err) {
@@ -94,11 +96,13 @@ export const Login = async (req: Request, res: Response) => {
       },
       JWT_SECRET as string
     );
+    const maskedEmail = maskEmail(existingUser.email)
+
     return res.status(200).json({
       message: 'Login succesffull',
       user: {
         id: existingUser.id,
-        email: existingUser.email,
+        email: maskedEmail,
         name: existingUser.name,
         createdAt: existingUser.created_at,
       },
