@@ -5,6 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../../config/api";
 import { Button } from "../sm/Button";
 import { FromError } from "../../types/user";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,7 +17,7 @@ import { FromError } from "../../types/user";
     const [password,setPassword] = useState('')
     const [errors, setErrors] = useState<FromError>({})
     const setUser = useUserStore((state) => state.setUser)
-
+    const navigate = useNavigate()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setErrors({})
@@ -45,9 +46,8 @@ import { FromError } from "../../types/user";
 
 
       return (
-         <div className="capitalize">
-            <form  onSubmit={handleSubmit}>
-                
+         <div className="capitalize h-screen  flex justify-center items-center">
+            <form  onSubmit={handleSubmit} className="p-12 bg-sky-300 rounded-lg shadow-lg">
             <InputBox 
                   label="name"
                   type="name"
@@ -81,8 +81,10 @@ import { FromError } from "../../types/user";
                 {
                     errors.general && <p className="text-red-500">{errors.general}</p>
                 }
-               <Button text='submit' type="submit" onClick={() => {}}>
+               <Button text='submit' type="submit" onClick={() => {}} >
                </Button>
+               <p> Already have an ACC?? <span className="cursor-pointer hover:text-blue-600 hover:underline mt-4" onClick={() => navigate('/login')}>login </span>  </p>
+                
             </form>
          </div>
       )

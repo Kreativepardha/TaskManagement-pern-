@@ -1,14 +1,21 @@
 
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import { RegisterForm } from './components/lg/LoginForm'
+import { LoginPage } from './pages/LoginPage'
+import { RegisterPage } from './pages/RegisterPage'
+
 
 function App() {
 
   return (
-  <div className='h-screen bg-slate-200flex flex-col'>
-      <RegisterForm />
+        <div>
+          <Routes>
+              <Route path='/login' element={<LoginPage />   }  />
+              <Route path='/register' element={<RegisterPage />   }  />
+          </Routes>
 
-    </div>
+        </div>
+
   )
 }
 

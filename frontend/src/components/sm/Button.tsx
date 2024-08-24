@@ -11,7 +11,7 @@ interface ButtonProps {
 
 export const Button: React.FC<ButtonProps> = ({ onClick, text }) => {
     return (
-        <button onClick={onClick} className="w-full bg-black p-2 rounded-lg text-white font-semibold hover:bg-yellow-300 hover:text-black">
+        <button onClick={onClick} className="w-full bg-black p-2 rounded-lg text-white my-2 font-semibold hover:bg-yellow-300 hover:text-black">
             {text}
         </button>
     )
